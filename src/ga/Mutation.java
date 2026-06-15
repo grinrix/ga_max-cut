@@ -3,29 +3,41 @@ package ga;
 import core.Individual;
 import java.util.Random;
 
+/**
+ * Operator mutacji bit-flip dla algorytmu genetycznego rozwiązującego problem Max-Cut.
+ *
+ * Mutacja bit-flip jest standardowym operatorem dla reprezentacji binarnej.
+ * Każdy gen chromosomu jest niezależnie poddawany próbie mutacji z takim samym
+ * prawdopodobieństwem {@code pm}. Odwrócony bit zmienia przynależność wierzchołka
+ * z podzbioru V1 do V2 lub odwrotnie.
+ */
 public class Mutation {
 
+    /** Źródło losowości — współdzielone w ramach obiektu. */
     private final Random random = new Random();
 
+    /**
+     * Wykonuje mutację bit-flip na chromosomie osobnika.
+     *
+     * Iteruje po każdym genie i z prawdopodobieństwem {@code pm} odwraca jego
+     * wartość (0→1 lub 1→0). Modyfikacja odbywa się in-place — zmienia tablicę
+     * wewnątrz obiektu {@code Individual}, dlatego należy wywołać tę metodę
+     * na kopiach potomków, a nie bezpośrednio na rodzicach.
+     *
+     * @param individual osobnik, którego chromosom zostanie zmutowany
+     * @param pm         prawdopodobieństwo mutacji pojedynczego bitu (0.0 – 1.0)
+     */
     public void bitFlipMutation(Individual individual, double pm) {
-        // Pobieramy tablicę genów osobnika (zakładam typ int[])
-        int[] genes = individual.getGenes();
+        int[] genes = individual.getChromosome();
 
-        // Przechodzimy po każdym genie po kolei
         for (int i = 0; i < genes.length; i++) {
-            // Sprawdzamy, czy zachodzi prawdopodobieństwo mutacji dla tego konkretnego bitu
             if (random.nextDouble() < pm) {
-                // Odwracamy bit: jeśli był 0, staje się 1; jeśli był 1, staje się 0
-                // Można to zrobić prostym warunkiem lub operatorem trójargumentowym:
-                genes[i] = (genes[i] == 0) ? 1 : 0;
-                
-                // Alternatywny, sprytny sposób matematyczny (XOR lub odejmowanie):
-                // genes[i] = 1 - genes[i];
+                // Odwrócenie bitu: 0 → 1, 1 → 0
+                genes[i] = 1 - genes[i];
             }
         }
-        
-        // UWAGA: Jeśli Twój Individual po zmianie tablicy genów musi 
-        // przeliczyć swój koszt/fitness na nowo, warto tu wywołać np.:
-        // individual.setGenes(genes); // o ile metoda modyfikuje też stan/flagi osobnika
+        // Uwaga: getChromosome() zwraca referencję do wewnętrznej tablicy,
+        // więc modyfikacja genes[] zmienia chromosom osobnika bezpośrednio.
+        // Po mutacji fitness osobnika jest nieaktualne — należy ponownie wywołać evaluate().
     }
 }

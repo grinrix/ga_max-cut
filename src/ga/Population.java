@@ -1,20 +1,48 @@
 package ga;
 
 import core.Individual;
-import java.util.List;
 
 public class Population {
 
-    // TODO: Zadeklarować strukturę (tablicę lub List<Individual>) przechowującą osobników
+    // Strukturę przechowująca osobników – tablica o stałym rozmiarze
+    private final Individual[] individuals;
 
     public Population(int size) {
-        // TODO: Zainicjalizować pustą populację o zadanym rozmiarze
+        // Zainicjalizowanie pustej populacji o zadanym rozmiarze
+        this.individuals = new Individual[size];
     }
 
-    // TODO: Napisać metody getIndividual(int index), setIndividual(int index, Individual ind)
+    // Zwraca osobnika o wskazanym indeksie
+    public Individual getIndividual(int index) {
+        return individuals[index];
+    }
+
+    // Ustawia osobnika na wskazanym indeksie
+    public void setIndividual(int index, Individual ind) {
+        this.individuals[index] = ind;
+    }
+    
+    // Zwraca aktualny rozmiar populacji (przydatne do pętli)
+    public int size() {
+        return individuals.length;
+    }
 
     public Individual getBestIndividual() {
-        // TODO: Zaimplementować przeszukiwanie populacji i zwracanie osobnika z najwyższym Fitness (Max-Cut)
-        return null;
+        // Jeśli populacja jest pusta lub niezainicjalizowana, zwracamy null
+        if (individuals == null || individuals.length == 0 || individuals[0] == null) {
+            return null;
+        }
+
+        // Zaczynamy poszukiwania, zakładając, że pierwszy osobnik jest najlepszy
+        Individual best = individuals[0];
+
+        // Przeszukujemy resztę populacji w poszukiwaniu wyższego Fitness (szukamy Max-Cut)
+        for (int i = 1; i < individuals.length; i++) {
+            if (individuals[i] != null && individuals[i].getFitness() > best.getFitness()) {
+                best = individuals[i];
+            }
+        }
+
+        return best;
     }
 }

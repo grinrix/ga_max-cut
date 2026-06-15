@@ -58,8 +58,7 @@ public class Main {
     public static void main(String[] args) {
 
         // Ścieżka do pliku instancji — z argumentu lub domyślna
-        String inputFile = (args.length > 0) ? args[0] : "data/input/test.txt";
-
+        String inputFile = (args.length > 0) ? args[0] :  "data/input/rudy_all/g05_60.0";
         // Katalog wyjściowy — tworzymy jeśli nie istnieje
         String outputDir = "data/output/";
         try {
